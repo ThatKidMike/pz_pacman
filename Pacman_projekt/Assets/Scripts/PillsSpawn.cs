@@ -1,0 +1,77 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class PillsSpawn : MonoBehaviour {
+
+    public GameObject pellet;
+    public GameObject bigPill;
+
+	// Use this for initialization
+	void Start () {
+
+        spawnPills();
+       		
+	}
+	
+	// Update is called once per frame
+	void Update () { 
+
+
+    }
+
+    void spawnPills() {
+
+        for (int j = 0; j < 10; j++) {
+            for (int i = 0; i < 26; i++) {
+                if (!Physics2D.OverlapCircle(new Vector2(-11 + i, -11 + j), (float)0.2)) {
+                    if((i == 0) && (j == 6))
+                        Instantiate(bigPill, new Vector2(-11 + i, -11 + j), Quaternion.identity);
+                    else if((i == 25) && (j == 6))
+                        Instantiate(bigPill, new Vector2(-11 + i, -11 + j), Quaternion.identity);
+                    else
+                    Instantiate(pellet, new Vector2(-11 + i, -11 + j), Quaternion.identity);
+                }
+            }
+        }
+
+        for(int j = 10; j < 15; j++) {
+            for (int i = 5; i < 21; i++) {
+                if (!Physics2D.OverlapCircle(new Vector2(-11 + i, -11 + j), (float)0.2))
+                    Instantiate(pellet, new Vector2(-11 + i, -11 + j), Quaternion.identity);
+            }
+        }
+
+        for(int i = 0; i < 9; i++) {
+            if (!Physics2D.OverlapCircle(new Vector2(-11 + i, 4), (float)0.2))
+                Instantiate(pellet, new Vector2(-11 + i, 4), Quaternion.identity);
+        }
+
+        for (int i = 17; i < 26; i++) {
+            if (!Physics2D.OverlapCircle(new Vector2(-11 + i, 4), (float)0.2))
+                Instantiate(pellet, new Vector2(-11 + i, 4), Quaternion.identity);
+        }
+
+        for (int j = 16; j < 20; j++) {
+            for (int i = 5; i < 21; i++) {
+                if (!Physics2D.OverlapCircle(new Vector2(-11 + i, -11 + j), (float)0.2))
+                    Instantiate(pellet, new Vector2(-11 + i, -11 + j), Quaternion.identity);
+            }
+        }
+
+        for (int j = 20; j < 31; j++) {
+            for (int i = 0; i < 26; i++) {
+                if (!Physics2D.OverlapCircle(new Vector2(-11 + i, -11 + j), (float)0.2)) {
+                    if ((i == 0) && (j == 28))
+                        Instantiate(bigPill, new Vector2(-11 + i, -11 + j), Quaternion.identity);
+                    else if ((i == 25) && (j == 28))
+                        Instantiate(bigPill, new Vector2(-11 + i, -11 + j), Quaternion.identity);
+                    else
+                        Instantiate(pellet, new Vector2(-11 + i, -11 + j), Quaternion.identity);
+                }
+            }
+        }
+
+    }
+
+}
