@@ -2508,6 +2508,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pellet: {fileID: 1110049203120172, guid: 13047d73c87f1554cb6f1079a62cd059, type: 2}
   bigPill: {fileID: 1424518422165584, guid: a194406aa215b2a458693c2cb0557778, type: 2}
+  node: {fileID: 0}
 --- !u!4 &1612967492
 Transform:
   m_ObjectHideFlags: 0
@@ -2838,11 +2839,11 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4213094879360162, guid: 566174ef73b9c264c92cbb1ff2f49556, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -5.75
+      value: -14.14
       objectReference: {fileID: 0}
     - target: {fileID: 4213094879360162, guid: 566174ef73b9c264c92cbb1ff2f49556, type: 2}
       propertyPath: m_LocalPosition.y
-      value: -5.08
+      value: -5.67
       objectReference: {fileID: 0}
     - target: {fileID: 4213094879360162, guid: 566174ef73b9c264c92cbb1ff2f49556, type: 2}
       propertyPath: m_LocalPosition.z
@@ -3124,7 +3125,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   velocity: 4
-  wayPoints: []
+  find: {fileID: 0}
+  lookFor: {fileID: 0}
 --- !u!212 &1932228754
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -3177,7 +3179,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1932228751}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.5, y: -5, z: 0}
+  m_LocalPosition: {x: 1, y: -5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -3197,7 +3199,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.987
+  m_Radius: 0.95
 --- !u!50 &1932228757
 Rigidbody2D:
   serializedVersion: 4
@@ -3475,7 +3477,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4847854905299704, guid: 2ef74d514caf47149a9e874c852c2923, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 17.34
+      value: 17
       objectReference: {fileID: 0}
     - target: {fileID: 4847854905299704, guid: 2ef74d514caf47149a9e874c852c2923, type: 2}
       propertyPath: m_LocalPosition.y
@@ -3491,11 +3493,41 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4134796888191414, guid: 2ef74d514caf47149a9e874c852c2923, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 4.02
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 4134796888191414, guid: 2ef74d514caf47149a9e874c852c2923, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -14.32
+      value: -14
+      objectReference: {fileID: 0}
+    - target: {fileID: 58472957784874258, guid: 2ef74d514caf47149a9e874c852c2923,
+        type: 2}
+      propertyPath: m_Radius
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 58945540659303544, guid: 2ef74d514caf47149a9e874c852c2923,
+        type: 2}
+      propertyPath: m_Radius
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 58472957784874258, guid: 2ef74d514caf47149a9e874c852c2923,
+        type: 2}
+      propertyPath: m_IsTrigger
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 58945540659303544, guid: 2ef74d514caf47149a9e874c852c2923,
+        type: 2}
+      propertyPath: m_IsTrigger
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 58945540659303544, guid: 2ef74d514caf47149a9e874c852c2923,
+        type: 2}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 58472957784874258, guid: 2ef74d514caf47149a9e874c852c2923,
+        type: 2}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2ef74d514caf47149a9e874c852c2923, type: 2}
@@ -3532,7 +3564,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   velocity: 3.9
-  redPoint: {fileID: 0}
 --- !u!50 &2103027799
 Rigidbody2D:
   serializedVersion: 4
