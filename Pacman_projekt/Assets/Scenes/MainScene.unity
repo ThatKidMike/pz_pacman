@@ -3124,7 +3124,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6778554755e01d7418264d3bc82a79b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  velocity: 4
+  velocity: 5
   find: {fileID: 0}
   lookFor: {fileID: 0}
 --- !u!212 &1932228754
@@ -3199,7 +3199,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.95
+  m_Radius: 0.985
 --- !u!50 &1932228757
 Rigidbody2D:
   serializedVersion: 4
@@ -3512,22 +3512,22 @@ Prefab:
     - target: {fileID: 58472957784874258, guid: 2ef74d514caf47149a9e874c852c2923,
         type: 2}
       propertyPath: m_IsTrigger
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 58945540659303544, guid: 2ef74d514caf47149a9e874c852c2923,
         type: 2}
       propertyPath: m_IsTrigger
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 58945540659303544, guid: 2ef74d514caf47149a9e874c852c2923,
         type: 2}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 58472957784874258, guid: 2ef74d514caf47149a9e874c852c2923,
         type: 2}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2ef74d514caf47149a9e874c852c2923, type: 2}
