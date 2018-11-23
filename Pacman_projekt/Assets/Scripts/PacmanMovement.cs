@@ -43,7 +43,7 @@ public class PacmanMovement : MonoBehaviour {
                 direction = Vector2.left;
                 moveToNxtPoint(direction);
             }
-            Debug.Log("Left");
+            //Debug.Log("Left");
 
         } else if(Input.GetKeyDown(KeyCode.RightArrow) && /*valid(new Vector2(2, 0)) &&*/ canMove(Vector2.right)) {
 
@@ -52,7 +52,7 @@ public class PacmanMovement : MonoBehaviour {
                 direction = Vector2.right;
                 moveToNxtPoint(direction);
             }
-            Debug.Log("Right");
+            //Debug.Log("Right");
 
         } else if(Input.GetKeyDown(KeyCode.UpArrow) && /*valid(new Vector2(0, 2)) &&*/ canMove(Vector2.up)) {
 
@@ -62,7 +62,7 @@ public class PacmanMovement : MonoBehaviour {
                 direction = Vector2.up;
                 moveToNxtPoint(direction);
             }
-            Debug.Log("Up");
+            //Debug.Log("Up");
 
         } else if(Input.GetKeyDown(KeyCode.DownArrow) && /*valid(new Vector2(0, -2)) &&*/ canMove(Vector2.down)) {
 
@@ -72,7 +72,7 @@ public class PacmanMovement : MonoBehaviour {
                 direction = Vector2.down;
                 moveToNxtPoint(direction);
             }
-            Debug.Log("Down");
+            //Debug.Log("Down");
 
         }
   
