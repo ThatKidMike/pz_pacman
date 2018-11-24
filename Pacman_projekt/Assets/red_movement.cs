@@ -5,7 +5,7 @@ using System;
 
 public class red_movement : MonoBehaviour {
 
-    public float velocity = 3.5f;
+    public float velocity = 4.9f;
 
     private GameObject playerChar;
     private Vector2 direction;
@@ -13,11 +13,12 @@ public class red_movement : MonoBehaviour {
     public PillsSpawn lookFor;
     private Vector2 target;
     private Vector2 currDirection;
+    private Vector2 currPosition;
     private Vector2[] allDirections = new Vector2[4];
-    float leastDistance = 100000f;
+    float leastDistance;
 
     // Use this for initialization
-    void Start () {
+    void Start() {
 
         transform.localPosition = new Vector2(-6, -5);
 
@@ -29,57 +30,135 @@ public class red_movement : MonoBehaviour {
         find = GameObject.Find("PillsSpawn");
         lookFor = find.GetComponent<PillsSpawn>();
         playerChar = GameObject.Find("watman_1");
-        target = playerChar.transform.position;
+
         currDirection = Vector2.right;
+        target = new Vector2(1, -5);
+
+        leastDistance = 10000f;
 
     }
-	
-	// Update is called once per frame
-	void Update () {
 
-        moveToNxtPoint();
+    // Update is called once per frame
+    void Update() {
 
-	}
+        //moveToNxtPoint();
+        // moveGhost();
+
+    }
+
+       
 
 
-    void moveToNxtPoint() {
+    void moveGhost() {
 
+        if (new Vector2(Mathf.RoundToInt(currPosition.x), Mathf.RoundToInt(currPosition.y)) != target && target != null) {
+
+            if(passedTheTarget()) {
+
+                Debug.Log("Visited");
+
+                currPosition = target;
+
+                transform.localPosition = currPosition;
+
+                //transform.localPosition = target;
+
+               // transform.localPosition += (Vector3)currDirection * velocity * Time.deltaTime;
+
+                //Debug.Log(target);
+
+            } 
+
+            moveToNxtPoint();
+
+            target = new Vector2(Mathf.RoundToInt(transform.localPosition.x + currDirection.x), 
+                Mathf.RoundToInt(transform.localPosition.y + currDirection.y));
+
+        } else {
+
+            transform.localPosition += (Vector3)currDirection * velocity * Time.deltaTime;
+
+        }
+
+
+
+    }
+
+
+
+    Vector2 moveToNxtPoint() {
+
+        Vector2 targetPos;
         Vector2 playerCharPos = playerChar.transform.position;
-        target = new Vector2((int)Math.Round(playerCharPos.x), (int)Math.Round(playerCharPos.y));
-        //Debug.Log(playerCharPos.x + ":" + playerCharPos.y);
+        targetPos = new Vector2(Mathf.RoundToInt(playerCharPos.x), Mathf.RoundToInt(playerCharPos.y));
 
-        float distance = lengthFromTarget(playerCharPos);
-        Debug.Log(distance);
+        Vector2[] validDirection = new Vector2[4];
+        Vector2 currPosition = transform.localPosition;
+        int foundDirections = 0;
+
+        //Debug.Log(distance);
 
         for (int i = 0; i < 4; i++) {
 
-            if ((leastDistance > distance) && (canMove(allDirections[i])) && (currDirection * -1 != allDirections[i])) {
-                leastDistance = distance;
-                currDirection = allDirections[i];
-                Vector2 currPosition = transform.localPosition;
-                Vector2 targetPos = new Vector2((int)Math.Round(currPosition.x + currDirection.x), (int)Math.Round(currPosition.y + currDirection.y));
-                transform.localPosition = Vector2.MoveTowards(currPosition, targetPos, velocity * Time.deltaTime);
+            if ((canMove(allDirections[i])) && (currDirection * -1 != allDirections[i])) {
+
+                validDirection[i] = allDirections[i];
+                foundDirections++;
+                
             }
         }
 
-      /*  if (canMove(currDirection) && currDirection!=newDirection) {
-            Vector2 currPosition = transform.localPosition;
-            Vector2 targetPos = new Vector2((int)Math.Round(currPosition.x + currDirection.x), (int)Math.Round(currPosition.y + currDirection.y));
-            transform.localPosition = Vector2.MoveTowards(currPosition, targetPos, velocity * Time.deltaTime);
-            Debug.Log(currDirection); 
+        Debug.Log(foundDirections);
 
-        } */
+        if (foundDirections == 1) {
 
-    }
+            int i = 0;
+            while (validDirection[i] != Vector2.zero) {
+                currDirection = validDirection[i];
+                i++;
+            }
+
+        }
+
+            if (foundDirections != 1) {
+
+            float leastDistance = 10000f;
+
+            for(int i = 0; i < 4; i++) {
+
+
+                if (validDirection[i] != Vector2.zero) {
+
+                    float distance = getDistance(new Vector2(transform.localPosition.x + validDirection[i].x,
+                        transform.localPosition.y + validDirection[i].y), targetPos);
+
+                    if (distance < leastDistance) {
+
+                        leastDistance = distance;
+                        currDirection = validDirection[i];
+
+                    }
+
+                }
+
+            }
+
+        }
+
+       // target = new Vector2(Mathf.RoundToInt(transform.localPosition.x + currDirection.x),Mathf.RoundToInt(transform.localPosition.y + currDirection.y));
+        Debug.Log(target);
         
 
-        
+        return currDirection;
+
+        } 
+  
 
     bool canMove(Vector2 d) {
 
         Vector2 currPosition = transform.localPosition;
 
-        if (lookFor.xy[(int)Math.Round(currPosition.x + d.x) + 30, (int)Math.Round(currPosition.y + d.y) + 30] == 1) {
+        if (lookFor.xy[Mathf.RoundToInt(currPosition.x + d.x) + 30, Mathf.RoundToInt(currPosition.y + d.y) + 30] == 1) {
             return true;
         } else {
             return false;
@@ -90,6 +169,7 @@ public class red_movement : MonoBehaviour {
     float lengthFromTarget(Vector2 targetPos) {
 
         Vector2 value = targetPos - (Vector2)transform.localPosition;
+        // Debug.Log(Vector2.Distance(targetPos, transform.localPosition));
         return value.sqrMagnitude;
 
     }
@@ -97,7 +177,7 @@ public class red_movement : MonoBehaviour {
     bool passedTheTarget() {
 
         float nodeToTarget = lengthFromTarget(target);
-        float nodeToSelf = lengthFromTarget(transform.localPosition);
+        float nodeToSelf = lengthFromTarget(new Vector2(transform.localPosition.x, transform.localPosition.y));
 
         return nodeToSelf > nodeToTarget;
 
@@ -110,8 +190,7 @@ public class red_movement : MonoBehaviour {
 
         float distance = (float)Math.Sqrt(dx * dx + dy * dy);
 
-        return distance;
-
+        return Vector2.Distance(pos_1, pos_2);
     }
 
 

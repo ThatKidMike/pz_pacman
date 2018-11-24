@@ -18,6 +18,7 @@ public class PacmanMovement : MonoBehaviour {
 
         find = GameObject.Find("PillsSpawn");
         lookFor = find.GetComponent<PillsSpawn>();
+        transform.position = new Vector2(1, -5);
         //position = gameObject.transform.position;
 
     }
