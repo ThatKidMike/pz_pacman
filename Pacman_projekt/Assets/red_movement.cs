@@ -32,7 +32,7 @@ public class red_movement : MonoBehaviour {
         playerChar = GameObject.Find("watman_1");
 
         currDirection = Vector2.right;
-        target = new Vector2(1, -5);
+        target = new Vector2(0, -5);
 
     }
 
@@ -48,6 +48,13 @@ public class red_movement : MonoBehaviour {
 
     void moveGhost() {
         
+        if((Vector2)transform.localPosition == target) {
+
+            target = new Vector2(target.x + Vector2.up.x, target.y + Vector2.up.y);
+
+        }
+
+        transform.localPosition = Vector2.MoveTowards(transform.localPosition, target, velocity * Time.deltaTime);
 
 
     } 
