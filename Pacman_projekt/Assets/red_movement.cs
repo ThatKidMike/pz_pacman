@@ -5,7 +5,7 @@ using System;
 
 public class red_movement : MonoBehaviour {
 
-    public float velocity = 4.9f;
+    public float velocity = 7.9f;
 
     private GameObject playerChar;
     private Vector2 direction;
@@ -14,10 +14,8 @@ public class red_movement : MonoBehaviour {
     private Vector2 target;
     private Vector2 currDirection = Vector2.right;
     private Vector2 currPosition;
-    private Vector2 lastDirection;
     private Vector2[] allDirections = new Vector2[4];
-    float leastDistance = 100000f;
-    System.Random rnd = new System.Random();
+    //System.Random rnd = new System.Random();
 
     // Use this for initialization
     void Start() {
@@ -48,28 +46,43 @@ public class red_movement : MonoBehaviour {
 
     void moveGhost() {
 
-        Vector2[] validDirections = new Vector2[4];
-        int counter = 0;
-        for(int i = 0; i < 4; i++) {
+        //This if statement is useful for allign the position of ghost - making sure that he turns on the right time
+        if ((Vector2)transform.localPosition == target) {
 
-            if(canMove(allDirections[i])) {
-                validDirections[counter] = allDirections[i];
-                counter++;
+            Vector2[] validDirections = new Vector2[4];
+            int counter = 0;
+            for (int i = 0; i < 4; i++) {
+
+                if (canMove(allDirections[i])) {
+                    validDirections[counter] = allDirections[i];
+                    counter++;
+                }
+
             }
 
-        }
+            float leastDistance = 1000f;
+            float distance;
+            currPosition = transform.localPosition;
+            Vector2 dir = Vector2.zero;
+            for (int i = 0; i < counter; i++) {
 
-        Vector2 dir = validDirections[rnd.Next(counter)];
-        currDirection = dir;
+                distance = getDistance(new Vector2(currPosition.x+validDirections[i].x, currPosition.y + validDirections[i].y), 
+                    playerChar.transform.localPosition);
+                if (leastDistance > distance) {
+                    leastDistance = distance;
+                    dir = validDirections[i];
+                }
 
-        //This if statement is useful for allign the position of ghost - making sure that he turns on the right time
-        if ((Vector2)transform.localPosition == target)
+            }
+            //Vector2 dir = validDirections[rnd.Next(counter)];
+            currDirection = dir;
+
             target = new Vector2(target.x + currDirection.x, target.y + currDirection.y);
 
-        transform.localPosition = Vector2.MoveTowards(transform.localPosition, target, velocity * Time.deltaTime);
-        lastDirection = currDirection;
+        } 
 
-
+            transform.localPosition = Vector2.MoveTowards(transform.localPosition, target, velocity * Time.deltaTime);
+  
     } 
   
 
