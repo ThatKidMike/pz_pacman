@@ -12,10 +12,12 @@ public class red_movement : MonoBehaviour {
     public GameObject find;
     public PillsSpawn lookFor;
     private Vector2 target;
-    private Vector2 currDirection;
+    private Vector2 currDirection = Vector2.right;
     private Vector2 currPosition;
+    private Vector2 lastDirection;
     private Vector2[] allDirections = new Vector2[4];
     float leastDistance = 100000f;
+    System.Random rnd = new System.Random();
 
     // Use this for initialization
     void Start() {
@@ -30,8 +32,6 @@ public class red_movement : MonoBehaviour {
         find = GameObject.Find("PillsSpawn");
         lookFor = find.GetComponent<PillsSpawn>();
         playerChar = GameObject.Find("watman_1");
-
-        currDirection = Vector2.right;
         target = new Vector2(0, -5);
 
     }
@@ -47,14 +47,27 @@ public class red_movement : MonoBehaviour {
 
 
     void moveGhost() {
-        
-        if((Vector2)transform.localPosition == target) {
 
-            target = new Vector2(target.x + Vector2.up.x, target.y + Vector2.up.y);
+        Vector2[] validDirections = new Vector2[4];
+        int counter = 0;
+        for(int i = 0; i < 4; i++) {
+
+            if(canMove(allDirections[i])) {
+                validDirections[counter] = allDirections[i];
+                counter++;
+            }
 
         }
 
+        Vector2 dir = validDirections[rnd.Next(counter)];
+        currDirection = dir;
+
+        //This if statement is useful for allign the position of ghost - making sure that he turns on the right time
+        if ((Vector2)transform.localPosition == target)
+            target = new Vector2(target.x + currDirection.x, target.y + currDirection.y);
+
         transform.localPosition = Vector2.MoveTowards(transform.localPosition, target, velocity * Time.deltaTime);
+        lastDirection = currDirection;
 
 
     } 
@@ -62,7 +75,8 @@ public class red_movement : MonoBehaviour {
 
     bool canMove(Vector2 d) {
 
-        if (lookFor.xy[Mathf.RoundToInt(transform.localPosition.x + d.x) + 30, Mathf.RoundToInt(transform.localPosition.y + d.y) + 30] == 1) {
+        if (lookFor.xy[Mathf.RoundToInt(transform.localPosition.x + d.x) + 30, Mathf.RoundToInt(transform.localPosition.y + d.y) + 30] == 1 
+            && currDirection * -1 != d) {
             return true;
         } else {
             return false;
