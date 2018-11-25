@@ -7,10 +7,11 @@ public class PacmanMovement : MonoBehaviour {
 
     public float velocity = 3f;
     private Vector2 go;
-    private Vector2 direction = Vector2.right;
+    public Vector2 direction = Vector2.right;
     //Vector2 position;
     public GameObject find;
     public PillsSpawn lookFor;
+    public Vector2 orientation;
 
 
     // Use this for initialization
@@ -94,7 +95,7 @@ public class PacmanMovement : MonoBehaviour {
         Vector2 currPosition = transform.localPosition;
         // transform.localPosition = new Vector2((int)Math.Round(currPosition.x + d.x), (int)Math.Round(currPosition.y + d.y));
         Vector2 targetPos = new Vector2((int)Math.Round(currPosition.x + d.x), (int)Math.Round(currPosition.y + d.y));
-        transform.localPosition = Vector2.MoveTowards(currPosition, targetPos, velocity * Time.deltaTime);
+        transform.localPosition = Vector2.MoveTowards(currPosition, targetPos, velocity * Time.deltaTime * 1.2f);
         
     }
 

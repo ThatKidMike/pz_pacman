@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class red_movement : MonoBehaviour {
+public class Blue_movement : MonoBehaviour {
 
     public float velocity = 2.9f;
 
@@ -19,12 +19,12 @@ public class red_movement : MonoBehaviour {
     private GameObject r_portal;
     //System.Random rnd = new System.Random();
 
-    private Vector2 scatter = new Vector2(14, 19);
+    private Vector2 scatter = new Vector2(14, -11);
 
     // Use this for initialization
     void Start() {
 
-        transform.localPosition = new Vector2(1, 7);
+        transform.localPosition = new Vector2(3, 4);
 
         allDirections[0] = Vector2.left;
         allDirections[1] = Vector2.right;
@@ -43,12 +43,9 @@ public class red_movement : MonoBehaviour {
     // Update is called once per frame
     void Update() {
 
-         moveGhost();
+        moveGhost();
 
     }
-
-
-
 
     void moveGhost() {
 
@@ -72,8 +69,8 @@ public class red_movement : MonoBehaviour {
             Vector2 dir = Vector2.zero;
             for (int i = 0; i < counter; i++) {
 
-                distance = getDistance(new Vector2(currPosition.x+validDirections[i].x, currPosition.y + validDirections[i].y), 
-                    playerChar.transform.localPosition);
+                distance = getDistance(new Vector2(currPosition.x + validDirections[i].x, currPosition.y + validDirections[i].y),
+                    getBlueTarget());
                 if (leastDistance > distance) {
                     leastDistance = distance;
                     dir = validDirections[i];
@@ -85,24 +82,53 @@ public class red_movement : MonoBehaviour {
 
             target = new Vector2(target.x + currDirection.x, target.y + currDirection.y);
 
-        } 
+        }
 
-            transform.localPosition = Vector2.MoveTowards(transform.localPosition, target, velocity * Time.deltaTime * 1.5f);
 
-        if(transform.localPosition == l_portal.transform.localPosition) {
+        transform.localPosition = Vector2.MoveTowards(transform.localPosition, target, velocity * Time.deltaTime * 1.7f);
+
+        if (transform.localPosition == l_portal.transform.localPosition) {
             transform.localPosition = r_portal.transform.localPosition;
             target = new Vector2(r_portal.transform.localPosition.x - 5, r_portal.transform.localPosition.y);
-        } else if(transform.localPosition == r_portal.transform.localPosition) {
+        } else if (transform.localPosition == r_portal.transform.localPosition) {
             transform.localPosition = l_portal.transform.localPosition;
             target = new Vector2(l_portal.transform.localPosition.x + 5, l_portal.transform.localPosition.y);
         }
-  
-    } 
-  
+
+    }
+
+    Vector2 getBlueTarget() {
+
+        Vector2 playerCharPos = playerChar.transform.localPosition;
+        Vector2 playerCharFacing = playerChar.GetComponent<PacmanMovement>().direction;
+
+        int playerCharPosX = Mathf.RoundToInt(playerChar.transform.position.x);
+        int playerCharPosY = Mathf.RoundToInt(playerChar.transform.position.y);
+
+        Vector2 playerCharTarget = new Vector2(playerCharPosX, playerCharPosY);
+
+        Vector2 target = playerCharTarget + (2 * playerCharFacing);
+
+        Vector2 tmpRedPos = GameObject.Find("ghost").transform.localPosition;
+
+        int tmpRedPosX = Mathf.RoundToInt(tmpRedPos.x);
+        int tmpRedPosY = Mathf.RoundToInt(tmpRedPos.y);
+
+        tmpRedPos = new Vector2(tmpRedPosX, tmpRedPosY);
+
+        float distance = getDistance(tmpRedPos, target);
+        distance *= 2;
+
+        target = new Vector2(tmpRedPos.x + distance, tmpRedPosY + distance);
+
+        return target;
+
+    }
+
 
     bool canMove(Vector2 d) {
 
-        if (lookFor.xy[Mathf.RoundToInt(transform.localPosition.x + d.x) + 30, Mathf.RoundToInt(transform.localPosition.y + d.y) + 30] == 1 
+        if (lookFor.xy[Mathf.RoundToInt(transform.localPosition.x + d.x) + 30, Mathf.RoundToInt(transform.localPosition.y + d.y) + 30] == 1
             && currDirection * -1 != d) {
             return true;
         } else {
@@ -121,6 +147,5 @@ public class red_movement : MonoBehaviour {
 
         //return Vector2.Distance(pos_1, pos_2);
     }
-
 
 }
