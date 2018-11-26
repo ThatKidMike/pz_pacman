@@ -23,6 +23,8 @@ public class Pink_movement : MonoBehaviour {
     public RuntimeAnimatorController down;
     public RuntimeAnimatorController left;
     public RuntimeAnimatorController right;
+    public RuntimeAnimatorController white;
+    public RuntimeAnimatorController blue;
 
     public int scatterModeTimer1 = 7;
     public int chaseModeTimer1 = 20;
@@ -115,6 +117,10 @@ public class Pink_movement : MonoBehaviour {
     void ChangeMode(Mode m) {
         currentMode = m;
     }
+
+    public void ChangeForFear() {
+        ChangeMode(Mode.Fear);
+    }
     //
 
     private Vector2 scatter = new Vector2(-11, 19);
@@ -148,21 +154,29 @@ public class Pink_movement : MonoBehaviour {
 
     void updateAnimatorController() {
 
-        if (currDirection == Vector2.up) {
+        if (currentMode != Mode.Fear) {
 
-            transform.GetComponent<Animator>().runtimeAnimatorController = up;
+            if (currDirection == Vector2.up) {
 
-        } else if (currDirection == Vector2.down) {
+                transform.GetComponent<Animator>().runtimeAnimatorController = up;
 
-            transform.GetComponent<Animator>().runtimeAnimatorController = down;
+            } else if (currDirection == Vector2.down) {
 
-        } else if (currDirection == Vector2.right) {
+                transform.GetComponent<Animator>().runtimeAnimatorController = down;
 
-            transform.GetComponent<Animator>().runtimeAnimatorController = right;
+            } else if (currDirection == Vector2.right) {
 
-        } else if (currDirection == Vector2.left) {
+                transform.GetComponent<Animator>().runtimeAnimatorController = right;
 
-            transform.GetComponent<Animator>().runtimeAnimatorController = left;
+            } else if (currDirection == Vector2.left) {
+
+                transform.GetComponent<Animator>().runtimeAnimatorController = left;
+
+            }
+
+        } else {
+
+            transform.GetComponent<Animator>().runtimeAnimatorController = blue;
 
         }
 

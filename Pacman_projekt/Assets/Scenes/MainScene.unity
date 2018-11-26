@@ -299,6 +299,8 @@ MonoBehaviour:
   down: {fileID: 9100000, guid: bf37c7caa4085ab449e39f3e6feca1ed, type: 2}
   left: {fileID: 9100000, guid: 3c403b0a605cbc94286adbcd190dfb84, type: 2}
   right: {fileID: 9100000, guid: ad7c65a55b9d83246b039f4786a191f1, type: 2}
+  white: {fileID: 9100000, guid: e34aa93ee3f1af94fa30a9037d58de0f, type: 2}
+  blue: {fileID: 9100000, guid: 357313ffac81b5b4fb9222341d1cb8a8, type: 2}
   scatterModeTimer1: 7
   chaseModeTimer1: 20
   scatterModeTimer2: 7
@@ -809,6 +811,8 @@ MonoBehaviour:
   down: {fileID: 9100000, guid: a3d75bee90402bf4dbb82d87773ab8d3, type: 2}
   left: {fileID: 9100000, guid: f5f25577b1d9ae64e88fd8a46c34d85c, type: 2}
   right: {fileID: 9100000, guid: 20cc556cb445d0148a8aa6af5bde77ae, type: 2}
+  white: {fileID: 9100000, guid: e34aa93ee3f1af94fa30a9037d58de0f, type: 2}
+  blue: {fileID: 9100000, guid: 357313ffac81b5b4fb9222341d1cb8a8, type: 2}
   scatterModeTimer1: 7
   chaseModeTimer1: 20
   scatterModeTimer2: 7
@@ -1533,6 +1537,8 @@ MonoBehaviour:
   down: {fileID: 9100000, guid: 5ca7eb5db689c18439c5dca2a555246f, type: 2}
   left: {fileID: 9100000, guid: 4674938d9c1a836478934f501b1c4dc0, type: 2}
   right: {fileID: 9100000, guid: 29653eae93989ed47bd552824e5026d5, type: 2}
+  white: {fileID: 9100000, guid: e34aa93ee3f1af94fa30a9037d58de0f, type: 2}
+  blue: {fileID: 9100000, guid: 357313ffac81b5b4fb9222341d1cb8a8, type: 2}
   scatterModeTimer1: 7
   chaseModeTimer1: 20
   scatterModeTimer2: 7
@@ -2218,6 +2224,8 @@ MonoBehaviour:
   down: {fileID: 9100000, guid: 0c8d88f869f64584b87ece7d641d00f8, type: 2}
   left: {fileID: 9100000, guid: 4eb3a212a9782f14f8b8e2a8d140a20c, type: 2}
   right: {fileID: 9100000, guid: 916a14ffb74629e44b5eac0efb155d43, type: 2}
+  white: {fileID: 9100000, guid: e34aa93ee3f1af94fa30a9037d58de0f, type: 2}
+  blue: {fileID: 9100000, guid: 357313ffac81b5b4fb9222341d1cb8a8, type: 2}
   scatterModeTimer1: 7
   chaseModeTimer1: 20
   scatterModeTimer2: 7

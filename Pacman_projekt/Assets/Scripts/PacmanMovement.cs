@@ -18,7 +18,7 @@ public class PacmanMovement : MonoBehaviour {
 
     private bool playedSound1 = false;
 
-    private AudioSource audio;
+    private AudioSource _audio;
 
 
 
@@ -28,7 +28,7 @@ public class PacmanMovement : MonoBehaviour {
         find = GameObject.Find("PillsSpawn");
         lookFor = find.GetComponent<PillsSpawn>();
         transform.position = new Vector2(1, -5);
-        audio = transform.GetComponent<AudioSource>();
+        _audio = gameObject.GetComponent<AudioSource>();
         //position = gameObject.transform.position;
 
     }
@@ -46,12 +46,12 @@ public class PacmanMovement : MonoBehaviour {
 
         if(playedSound1) {
 
-            audio.PlayOneShot(sound1);
+            _audio.PlayOneShot(sound1);
             playedSound1 = false;
 
         } else {
 
-            audio.PlayOneShot(sound2);
+            _audio.PlayOneShot(sound2);
             playedSound1 = true;
 
         }
