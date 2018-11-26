@@ -17,6 +17,105 @@ public class red_movement : MonoBehaviour {
     private Vector2[] allDirections = new Vector2[4];
     private GameObject l_portal;
     private GameObject r_portal;
+
+    public RuntimeAnimatorController up;
+    public RuntimeAnimatorController down;
+    public RuntimeAnimatorController left;
+    public RuntimeAnimatorController right;
+
+    //movement mode
+    public int scatterModeTimer1 = 7;
+    public int chaseModeTimer1 = 20;
+    public int scatterModeTimer2 = 7;
+    public int chaseModeTimer2 = 20;
+    public int scatterModeTimer3 = 5;
+    public int chaseModeTimer3 = 20;
+    public int scatterModeTimer4 = 5;
+
+    private int modeChangeIterator = 1;
+    private float modeChangeTimer = 0;
+
+    public enum Mode {
+        Chase,
+        Scatter,
+        Fear
+    };
+
+    Mode currentMode = Mode.Scatter;
+
+    void ModeUpdate() {
+
+        if(currentMode != Mode.Fear) {
+
+            modeChangeTimer += Time.deltaTime;
+
+            if(modeChangeIterator == 1) {
+
+                if(currentMode == Mode.Scatter && modeChangeTimer > scatterModeTimer1) {
+
+                    ChangeMode(Mode.Chase);
+                    modeChangeTimer = 0;
+
+                }
+
+                if(currentMode == Mode.Chase && modeChangeTimer > chaseModeTimer1) {
+                    modeChangeIterator = 2;
+                    ChangeMode(Mode.Scatter);
+                    modeChangeTimer = 0;
+                }
+
+            } else if(modeChangeIterator == 2) {
+
+                if (currentMode == Mode.Scatter && modeChangeTimer > scatterModeTimer2) {
+
+                    ChangeMode(Mode.Chase);
+                    modeChangeTimer = 0;
+
+                }
+
+                if (currentMode == Mode.Chase && modeChangeTimer > chaseModeTimer2) {
+                    modeChangeIterator = 3;
+                    ChangeMode(Mode.Scatter);
+                    modeChangeTimer = 0;
+                }
+
+            } else if(modeChangeIterator == 3) {
+
+                if (currentMode == Mode.Scatter && modeChangeTimer > scatterModeTimer3) {
+
+                    ChangeMode(Mode.Chase);
+                    modeChangeTimer = 0;
+
+                }
+
+                if (currentMode == Mode.Chase && modeChangeTimer > chaseModeTimer3) {
+                    modeChangeIterator = 4;
+                    ChangeMode(Mode.Scatter);
+                    modeChangeTimer = 0;
+                }
+
+            } else if(modeChangeIterator == 4) {
+
+                if (currentMode == Mode.Scatter && modeChangeTimer > scatterModeTimer4) {
+
+                    ChangeMode(Mode.Chase);
+                    modeChangeTimer = 0;
+
+                }
+
+            }
+
+        } else if(currentMode == Mode.Fear) {
+
+
+        }
+
+    }
+
+    void ChangeMode(Mode m) {
+        currentMode = m;
+    }
+    //
     //System.Random rnd = new System.Random();
 
     private Vector2 scatter = new Vector2(14, 19);
@@ -44,6 +143,29 @@ public class red_movement : MonoBehaviour {
     void Update() {
 
          moveGhost();
+        ModeUpdate();
+
+    }
+
+    void updateAnimatorController() {
+
+        if (currDirection == Vector2.up) {
+
+            transform.GetComponent<Animator>().runtimeAnimatorController = up;
+
+        } else if (currDirection == Vector2.down) {
+
+            transform.GetComponent<Animator>().runtimeAnimatorController = down;
+
+        } else if (currDirection == Vector2.right) {
+
+            transform.GetComponent<Animator>().runtimeAnimatorController = right;
+
+        } else if (currDirection == Vector2.left) {
+
+            transform.GetComponent<Animator>().runtimeAnimatorController = left;
+
+        }
 
     }
 
@@ -72,11 +194,24 @@ public class red_movement : MonoBehaviour {
             Vector2 dir = Vector2.zero;
             for (int i = 0; i < counter; i++) {
 
-                distance = getDistance(new Vector2(currPosition.x+validDirections[i].x, currPosition.y + validDirections[i].y), 
-                    playerChar.transform.localPosition);
-                if (leastDistance > distance) {
-                    leastDistance = distance;
-                    dir = validDirections[i];
+                if (currentMode == Mode.Chase) {
+
+                    distance = getDistance(new Vector2(currPosition.x + validDirections[i].x, currPosition.y + validDirections[i].y),
+                        playerChar.transform.localPosition);
+                    if (leastDistance > distance) {
+                        leastDistance = distance;
+                        dir = validDirections[i];
+                    }
+
+                } else if(currentMode == Mode.Scatter) {
+
+                    distance = getDistance(new Vector2(currPosition.x + validDirections[i].x, currPosition.y + validDirections[i].y),
+                        scatter);
+                    if (leastDistance > distance) {
+                        leastDistance = distance;
+                        dir = validDirections[i];
+                    }
+
                 }
 
             }
@@ -88,6 +223,8 @@ public class red_movement : MonoBehaviour {
         } 
 
             transform.localPosition = Vector2.MoveTowards(transform.localPosition, target, velocity * Time.deltaTime * 1.5f);
+
+        updateAnimatorController();
 
         if(transform.localPosition == l_portal.transform.localPosition) {
             transform.localPosition = r_portal.transform.localPosition;
@@ -121,6 +258,5 @@ public class red_movement : MonoBehaviour {
 
         //return Vector2.Distance(pos_1, pos_2);
     }
-
 
 }

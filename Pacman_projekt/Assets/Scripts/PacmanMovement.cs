@@ -5,6 +5,9 @@ using System;
 
 public class PacmanMovement : MonoBehaviour {
 
+    public AudioClip sound1;
+    public AudioClip sound2;
+
     public float velocity = 3f;
     private Vector2 go;
     public Vector2 direction = Vector2.right;
@@ -13,6 +16,11 @@ public class PacmanMovement : MonoBehaviour {
     public PillsSpawn lookFor;
     public Vector2 orientation;
 
+    private bool playedSound1 = false;
+
+    private AudioSource audio;
+
+
 
     // Use this for initialization
     void Start () {
@@ -20,6 +28,7 @@ public class PacmanMovement : MonoBehaviour {
         find = GameObject.Find("PillsSpawn");
         lookFor = find.GetComponent<PillsSpawn>();
         transform.position = new Vector2(1, -5);
+        audio = transform.GetComponent<AudioSource>();
         //position = gameObject.transform.position;
 
     }
@@ -32,6 +41,21 @@ public class PacmanMovement : MonoBehaviour {
         moveToNxtPoint(direction);
 
 	}
+
+    public void PlaySound() {
+
+        if(playedSound1) {
+
+            audio.PlayOneShot(sound1);
+            playedSound1 = false;
+
+        } else {
+
+            audio.PlayOneShot(sound2);
+            playedSound1 = true;
+
+        }
+    }
 
 
     // Checks for User's input and adjusts the movement direction and the facing direction
