@@ -26,6 +26,8 @@ public class Pink_movement : MonoBehaviour {
     public RuntimeAnimatorController white;
     public RuntimeAnimatorController blue;
 
+    private Mode previousMode;
+
     public int scatterModeTimer1 = 7;
     public int chaseModeTimer1 = 20;
     public int scatterModeTimer2 = 7;
@@ -33,6 +35,8 @@ public class Pink_movement : MonoBehaviour {
     public int scatterModeTimer3 = 5;
     public int chaseModeTimer3 = 20;
     public int scatterModeTimer4 = 5;
+
+    public int fearTimer = 7;
 
     private int modeChangeIterator = 1;
     private float modeChangeTimer = 0;
@@ -56,6 +60,7 @@ public class Pink_movement : MonoBehaviour {
                 if (currentMode == Mode.Scatter && modeChangeTimer > scatterModeTimer1) {
 
                     ChangeMode(Mode.Chase);
+                    previousMode = Mode.Chase;
                     modeChangeTimer = 0;
 
                 }
@@ -63,6 +68,7 @@ public class Pink_movement : MonoBehaviour {
                 if (currentMode == Mode.Chase && modeChangeTimer > chaseModeTimer1) {
                     modeChangeIterator = 2;
                     ChangeMode(Mode.Scatter);
+                    previousMode = Mode.Scatter;
                     modeChangeTimer = 0;
                 }
 
@@ -71,6 +77,7 @@ public class Pink_movement : MonoBehaviour {
                 if (currentMode == Mode.Scatter && modeChangeTimer > scatterModeTimer2) {
 
                     ChangeMode(Mode.Chase);
+                    previousMode = Mode.Chase;
                     modeChangeTimer = 0;
 
                 }
@@ -78,6 +85,7 @@ public class Pink_movement : MonoBehaviour {
                 if (currentMode == Mode.Chase && modeChangeTimer > chaseModeTimer2) {
                     modeChangeIterator = 3;
                     ChangeMode(Mode.Scatter);
+                    previousMode = Mode.Scatter;
                     modeChangeTimer = 0;
                 }
 
@@ -86,6 +94,7 @@ public class Pink_movement : MonoBehaviour {
                 if (currentMode == Mode.Scatter && modeChangeTimer > scatterModeTimer3) {
 
                     ChangeMode(Mode.Chase);
+                    previousMode = Mode.Chase;
                     modeChangeTimer = 0;
 
                 }
@@ -93,6 +102,7 @@ public class Pink_movement : MonoBehaviour {
                 if (currentMode == Mode.Chase && modeChangeTimer > chaseModeTimer3) {
                     modeChangeIterator = 4;
                     ChangeMode(Mode.Scatter);
+                    previousMode = Mode.Scatter;
                     modeChangeTimer = 0;
                 }
 
@@ -101,6 +111,7 @@ public class Pink_movement : MonoBehaviour {
                 if (currentMode == Mode.Scatter && modeChangeTimer > scatterModeTimer4) {
 
                     ChangeMode(Mode.Chase);
+                    previousMode = Mode.Chase;
                     modeChangeTimer = 0;
 
                 }
@@ -109,13 +120,27 @@ public class Pink_movement : MonoBehaviour {
 
         } else if (currentMode == Mode.Fear) {
 
+            modeChangeTimer += Time.deltaTime;
+
+            if (modeChangeTimer > fearTimer) {
+
+                ChangeMode(previousMode);
+                modeChangeTimer = 0;
+
+            }
+
 
         }
 
     }
 
     void ChangeMode(Mode m) {
+
+        if (currentMode != Mode.Fear)
+            modeChangeTimer = 0;
+
         currentMode = m;
+
     }
 
     public void ChangeForFear() {
@@ -220,6 +245,16 @@ public class Pink_movement : MonoBehaviour {
                         leastDistance = distance;
                         dir = validDirections[i];
                     }
+                } else if (currentMode == Mode.Fear) {
+
+                    leastDistance = 1;
+                    distance = getDistance(new Vector2(currPosition.x + validDirections[i].x, currPosition.y + validDirections[i].y),
+                        playerChar.transform.localPosition);
+                    if (leastDistance < distance) {
+                        leastDistance = distance;
+                        dir = validDirections[i];
+                    }
+
                 }
 
             }
@@ -231,7 +266,14 @@ public class Pink_movement : MonoBehaviour {
         }
 
 
-        transform.localPosition = Vector2.MoveTowards(transform.localPosition, target, velocity * Time.deltaTime * 1.7f);
+        if (currentMode == Mode.Fear) {
+
+            transform.localPosition = Vector2.MoveTowards(transform.localPosition, target, velocity * Time.deltaTime * 0.7f);
+
+        } else {
+
+            transform.localPosition = Vector2.MoveTowards(transform.localPosition, target, velocity * Time.deltaTime * 1.7f);
+        }
 
         updateAnimatorController();
 

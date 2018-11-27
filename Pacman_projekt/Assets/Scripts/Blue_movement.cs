@@ -19,12 +19,18 @@ public class Blue_movement : MonoBehaviour {
     private GameObject r_portal;
     //System.Random rnd = new System.Random
 
+    private float waitTime = 7;
+    private float theTime = 0;
+    private bool isInSpawn = true;
+
     public RuntimeAnimatorController up;
     public RuntimeAnimatorController down;
     public RuntimeAnimatorController left;
     public RuntimeAnimatorController right;
     public RuntimeAnimatorController white;
     public RuntimeAnimatorController blue;
+
+    private Mode previousMode;
 
     public int scatterModeTimer1 = 7;
     public int chaseModeTimer1 = 20;
@@ -33,6 +39,8 @@ public class Blue_movement : MonoBehaviour {
     public int scatterModeTimer3 = 5;
     public int chaseModeTimer3 = 20;
     public int scatterModeTimer4 = 5;
+
+    public int fearTimer = 7;
 
     private int modeChangeIterator = 1;
     private float modeChangeTimer = 0;
@@ -56,6 +64,7 @@ public class Blue_movement : MonoBehaviour {
                 if (currentMode == Mode.Scatter && modeChangeTimer > scatterModeTimer1) {
 
                     ChangeMode(Mode.Chase);
+                    previousMode = Mode.Chase;
                     modeChangeTimer = 0;
 
                 }
@@ -63,6 +72,7 @@ public class Blue_movement : MonoBehaviour {
                 if (currentMode == Mode.Chase && modeChangeTimer > chaseModeTimer1) {
                     modeChangeIterator = 2;
                     ChangeMode(Mode.Scatter);
+                    previousMode = Mode.Scatter;
                     modeChangeTimer = 0;
                 }
 
@@ -71,6 +81,7 @@ public class Blue_movement : MonoBehaviour {
                 if (currentMode == Mode.Scatter && modeChangeTimer > scatterModeTimer2) {
 
                     ChangeMode(Mode.Chase);
+                    previousMode = Mode.Chase;
                     modeChangeTimer = 0;
 
                 }
@@ -78,6 +89,7 @@ public class Blue_movement : MonoBehaviour {
                 if (currentMode == Mode.Chase && modeChangeTimer > chaseModeTimer2) {
                     modeChangeIterator = 3;
                     ChangeMode(Mode.Scatter);
+                    previousMode = Mode.Scatter;
                     modeChangeTimer = 0;
                 }
 
@@ -86,6 +98,7 @@ public class Blue_movement : MonoBehaviour {
                 if (currentMode == Mode.Scatter && modeChangeTimer > scatterModeTimer3) {
 
                     ChangeMode(Mode.Chase);
+                    previousMode = Mode.Chase;
                     modeChangeTimer = 0;
 
                 }
@@ -93,6 +106,7 @@ public class Blue_movement : MonoBehaviour {
                 if (currentMode == Mode.Chase && modeChangeTimer > chaseModeTimer3) {
                     modeChangeIterator = 4;
                     ChangeMode(Mode.Scatter);
+                    previousMode = Mode.Scatter;
                     modeChangeTimer = 0;
                 }
 
@@ -101,6 +115,7 @@ public class Blue_movement : MonoBehaviour {
                 if (currentMode == Mode.Scatter && modeChangeTimer > scatterModeTimer4) {
 
                     ChangeMode(Mode.Chase);
+                    previousMode = Mode.Chase;
                     modeChangeTimer = 0;
 
                 }
@@ -109,13 +124,27 @@ public class Blue_movement : MonoBehaviour {
 
         } else if (currentMode == Mode.Fear) {
 
+            modeChangeTimer += Time.deltaTime;
+
+            if (modeChangeTimer > fearTimer) {
+
+                ChangeMode(previousMode);
+                modeChangeTimer = 0;
+
+            }
+
 
         }
 
     }
 
     void ChangeMode(Mode m) {
+
+        if (currentMode != Mode.Fear)
+            modeChangeTimer = 0;
+
         currentMode = m;
+
     }
 
     public void ChangeForFear() {
@@ -184,6 +213,10 @@ public class Blue_movement : MonoBehaviour {
 
     void moveGhost() {
 
+        if (isInSpawn) {
+            spawnTime();
+        }
+
         //This if statement is useful for allign the position of ghost - making sure that he turns on the right time
         if ((Vector2)transform.localPosition == target) {
 
@@ -222,6 +255,16 @@ public class Blue_movement : MonoBehaviour {
                         dir = validDirections[i];
                     }
 
+                } else if (currentMode == Mode.Fear) {
+
+                    leastDistance = 1;
+                    distance = getDistance(new Vector2(currPosition.x + validDirections[i].x, currPosition.y + validDirections[i].y),
+                        playerChar.transform.localPosition);
+                    if (leastDistance < distance) {
+                        leastDistance = distance;
+                        dir = validDirections[i];
+                    }
+
                 }
 
             }
@@ -232,8 +275,14 @@ public class Blue_movement : MonoBehaviour {
 
         }
 
+        if(currentMode == Mode.Fear) {
 
-        transform.localPosition = Vector2.MoveTowards(transform.localPosition, target, velocity * Time.deltaTime * 1.7f);
+           transform.localPosition = Vector2.MoveTowards(transform.localPosition, target, velocity * Time.deltaTime * 0.7f);
+
+        } else {
+
+            transform.localPosition = Vector2.MoveTowards(transform.localPosition, target, velocity * Time.deltaTime * 1.7f);
+        }
 
         updateAnimatorController();
 
@@ -296,6 +345,19 @@ public class Blue_movement : MonoBehaviour {
         return distance;
 
         //return Vector2.Distance(pos_1, pos_2);
+    }
+
+    void spawnTime() {
+
+        theTime += Time.deltaTime;
+
+        if (waitTime > theTime) {
+            target = new Vector2(3, 4);
+        } else {
+            isInSpawn = false;
+            target = new Vector2(1, 7);
+        }
+
     }
 
 
