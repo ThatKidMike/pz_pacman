@@ -19,6 +19,9 @@ public class Blue_movement : MonoBehaviour {
     private GameObject r_portal;
     //System.Random rnd = new System.Random
 
+    private Vector2 spawnCoordinates;
+    private Vector2 initialCoordinates;
+
     private float waitTime = 7;
     private float theTime = 0;
     private bool isInSpawn = true;
@@ -40,18 +43,84 @@ public class Blue_movement : MonoBehaviour {
     public int chaseModeTimer3 = 20;
     public int scatterModeTimer4 = 5;
 
-    public int fearTimer = 7;
+    public Sprite invisibleUp;
+    public Sprite invisibleDown;
+    public Sprite invisibleLeft;
+    public Sprite invisibleRight;
+
+    public int fearTimer = 10;
+    public int blinkingTime = 7;
+
+    bool isWhite = false;
+
 
     private int modeChangeIterator = 1;
     private float modeChangeTimer = 0;
+    private float blinkTimer = 0;
 
     public enum Mode {
         Chase,
         Scatter,
-        Fear
+        Fear,
+        Eaten
     };
 
     Mode currentMode = Mode.Scatter;
+
+    
+    //
+
+    private Vector2 scatter = new Vector2(14, -11);
+
+    // Use this for initialization
+    void Start() {
+
+        transform.localPosition = new Vector2(3, 4);
+
+        allDirections[0] = Vector2.left;
+        allDirections[1] = Vector2.right;
+        allDirections[2] = Vector2.up;
+        allDirections[3] = Vector2.down;
+
+        find = GameObject.Find("PillsSpawn");
+        lookFor = find.GetComponent<PillsSpawn>();
+        playerChar = GameObject.Find("watman_1");
+        l_portal = GameObject.Find("left_portal");
+        r_portal = GameObject.Find("right_portal");
+        target = new Vector2(1, 7);
+
+        spawnCoordinates = new Vector2(0, 4);
+        initialCoordinates = new Vector2(1, 7);
+
+    }
+
+    // Update is called once per frame
+    void Update() {
+
+        moveGhost();
+        ModeUpdate();
+        CollisionDetection();
+
+    }
+
+    void Eaten() {
+
+        currentMode = Mode.Eaten;
+
+    }
+
+    void CollisionDetection() {
+
+        Rect ghostRect = new Rect(transform.position, transform.GetComponent<SpriteRenderer>().sprite.bounds.size / 4);
+        Rect playerCharRect = new Rect(playerChar.transform.position, playerChar.transform.GetComponent<SpriteRenderer>().sprite.bounds.size / 4);
+
+        if (ghostRect.Overlaps(playerCharRect) && currentMode == Mode.Fear) {
+
+            Eaten();
+
+        }
+
+    }
 
     void ModeUpdate() {
 
@@ -126,13 +195,36 @@ public class Blue_movement : MonoBehaviour {
 
             modeChangeTimer += Time.deltaTime;
 
+            if (modeChangeTimer >= blinkingTime) {
+
+                blinkTimer += Time.deltaTime;
+
+                if (blinkTimer >= 0.1f) {
+
+                    blinkTimer = 0f;
+
+                    if (isWhite) {
+
+                        transform.GetComponent<Animator>().runtimeAnimatorController = blue;
+                        isWhite = false;
+
+                    } else {
+
+                        transform.GetComponent<Animator>().runtimeAnimatorController = white;
+                        isWhite = true;
+
+                    }
+
+                }
+
+            }
+
             if (modeChangeTimer > fearTimer) {
 
                 ChangeMode(previousMode);
                 modeChangeTimer = 0;
 
             }
-
 
         }
 
@@ -143,6 +235,9 @@ public class Blue_movement : MonoBehaviour {
         if (currentMode != Mode.Fear)
             modeChangeTimer = 0;
 
+        if (currentMode == Mode.Fear && m == Mode.Fear)
+            modeChangeTimer = 0;
+
         currentMode = m;
 
     }
@@ -150,40 +245,10 @@ public class Blue_movement : MonoBehaviour {
     public void ChangeForFear() {
         ChangeMode(Mode.Fear);
     }
-    //
-
-    private Vector2 scatter = new Vector2(14, -11);
-
-    // Use this for initialization
-    void Start() {
-
-        transform.localPosition = new Vector2(3, 4);
-
-        allDirections[0] = Vector2.left;
-        allDirections[1] = Vector2.right;
-        allDirections[2] = Vector2.up;
-        allDirections[3] = Vector2.down;
-
-        find = GameObject.Find("PillsSpawn");
-        lookFor = find.GetComponent<PillsSpawn>();
-        playerChar = GameObject.Find("watman_1");
-        l_portal = GameObject.Find("left_portal");
-        r_portal = GameObject.Find("right_portal");
-        target = new Vector2(1, 7);
-
-    }
-
-    // Update is called once per frame
-    void Update() {
-
-        moveGhost();
-        ModeUpdate();
-
-    }
 
     void updateAnimatorController() {
 
-        if (currentMode != Mode.Fear) {
+        if (currentMode != Mode.Fear && currentMode != Mode.Eaten) {
 
             if (currDirection == Vector2.up) {
 
@@ -203,9 +268,31 @@ public class Blue_movement : MonoBehaviour {
 
             }
 
-        } else {
+        } else if (currentMode == Mode.Fear) {
 
             transform.GetComponent<Animator>().runtimeAnimatorController = blue;
+
+        } else if (currentMode == Mode.Eaten) {
+
+            transform.GetComponent<Animator>().runtimeAnimatorController = null;
+
+            if (currDirection == Vector2.up) {
+
+                transform.GetComponent<SpriteRenderer>().sprite = invisibleUp;
+
+            } else if (currDirection == Vector2.down) {
+
+                transform.GetComponent<SpriteRenderer>().sprite = invisibleDown;
+
+            } else if (currDirection == Vector2.right) {
+
+                transform.GetComponent<SpriteRenderer>().sprite = invisibleRight;
+
+            } else if (currDirection == Vector2.left) {
+
+                transform.GetComponent<SpriteRenderer>().sprite = invisibleLeft;
+
+            }
 
         }
 
@@ -265,6 +352,15 @@ public class Blue_movement : MonoBehaviour {
                         dir = validDirections[i];
                     }
 
+                } else if (currentMode == Mode.Eaten) {
+
+                    distance = getDistance(new Vector2(currPosition.x + validDirections[i].x, currPosition.y + validDirections[i].y),
+                        initialCoordinates);
+                    if (leastDistance > distance) {
+                        leastDistance = distance;
+                        dir = validDirections[i];
+                    }
+
                 }
 
             }
@@ -275,10 +371,18 @@ public class Blue_movement : MonoBehaviour {
 
         }
 
-        if(currentMode == Mode.Fear) {
+        if (currentMode == Mode.Fear) {
 
-           transform.localPosition = Vector2.MoveTowards(transform.localPosition, target, velocity * Time.deltaTime * 0.7f);
+            transform.localPosition = Vector2.MoveTowards(transform.localPosition, target, velocity * Time.deltaTime * 0.7f);
 
+        } else if (currentMode == Mode.Eaten) {
+            if (transform.localPosition == (Vector3)initialCoordinates)
+                target = spawnCoordinates;
+            transform.localPosition = Vector2.MoveTowards(transform.localPosition, target, velocity * Time.deltaTime * 2.4f);
+            if (transform.localPosition == (Vector3)spawnCoordinates) {
+                ChangeMode(previousMode);
+                target = initialCoordinates;
+            }
         } else {
 
             transform.localPosition = Vector2.MoveTowards(transform.localPosition, target, velocity * Time.deltaTime * 1.7f);
