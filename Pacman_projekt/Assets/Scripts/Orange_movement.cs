@@ -65,7 +65,7 @@ public class Orange_movement : MonoBehaviour {
         Eaten
     };
 
-    Mode currentMode = Mode.Scatter;
+    public Mode currentMode = Mode.Scatter;
 
     //
 
@@ -86,7 +86,7 @@ public class Orange_movement : MonoBehaviour {
         playerChar = GameObject.Find("watman_1");
         l_portal = GameObject.Find("left_portal");
         r_portal = GameObject.Find("right_portal");
-
+        
         spawnCoordinates = new Vector2(3, 4);
         initialCoordinates = new Vector2(1, 7);
 
@@ -103,7 +103,7 @@ public class Orange_movement : MonoBehaviour {
 
     void Eaten() {
 
-        currentMode = Mode.Eaten;
+        ChangeMode(Mode.Eaten);
 
     }
 
@@ -122,7 +122,7 @@ public class Orange_movement : MonoBehaviour {
 
     void ModeUpdate() {
 
-        if (currentMode != Mode.Fear) {
+        if (currentMode != Mode.Fear && currentMode != Mode.Eaten) {
 
             modeChangeTimer += Time.deltaTime;
 
@@ -230,11 +230,14 @@ public class Orange_movement : MonoBehaviour {
 
     void ChangeMode(Mode m) {
 
-        if (currentMode != Mode.Fear)
+        if (currentMode != Mode.Fear && currentMode != Mode.Eaten)
             modeChangeTimer = 0;
 
         if (currentMode == Mode.Fear && m == Mode.Fear)
             modeChangeTimer = 0;
+
+        if (currentMode == Mode.Eaten && m == Mode.Fear)
+            m = Mode.Eaten;
 
         currentMode = m;
 

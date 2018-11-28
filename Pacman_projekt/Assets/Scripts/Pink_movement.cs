@@ -22,6 +22,12 @@ public class Pink_movement : MonoBehaviour {
     private Vector2 spawnCoordinates;
     private Vector2 initialCoordinates;
 
+    public GameObject fearModeSound;
+    public AudioSource fearSound;
+
+    public GameObject mainBackground;
+    public AudioSource backgroundSound;
+
     public RuntimeAnimatorController up;
     public RuntimeAnimatorController down;
     public RuntimeAnimatorController left;
@@ -60,7 +66,7 @@ public class Pink_movement : MonoBehaviour {
         Eaten
     };
 
-    Mode currentMode = Mode.Scatter;
+    public Mode currentMode = Mode.Scatter;
 
 
     private Vector2 scatter = new Vector2(-11, 19);
@@ -82,6 +88,12 @@ public class Pink_movement : MonoBehaviour {
         r_portal = GameObject.Find("right_portal");
         target = new Vector2(1, 7);
 
+        fearModeSound = GameObject.Find("fearModeSound");
+        fearSound = fearModeSound.GetComponent<AudioSource>();
+
+        mainBackground = GameObject.Find("background_sound");
+        backgroundSound = mainBackground.GetComponent<AudioSource>();
+
         spawnCoordinates = new Vector2(3, 4);
         initialCoordinates = new Vector2(1, 7);
 
@@ -98,7 +110,7 @@ public class Pink_movement : MonoBehaviour {
 
     void Eaten() {
 
-        currentMode = Mode.Eaten;
+        ChangeMode(Mode.Eaten);
 
     }
 
@@ -117,7 +129,7 @@ public class Pink_movement : MonoBehaviour {
 
     void ModeUpdate() {
 
-        if (currentMode != Mode.Fear) {
+        if (currentMode != Mode.Fear && currentMode != Mode.Eaten) {
 
             modeChangeTimer += Time.deltaTime;
 
@@ -225,11 +237,14 @@ public class Pink_movement : MonoBehaviour {
 
     void ChangeMode(Mode m) {
 
-        if (currentMode != Mode.Fear)
+        if (currentMode != Mode.Fear && currentMode != Mode.Eaten)
             modeChangeTimer = 0;
 
         if (currentMode == Mode.Fear && m == Mode.Fear)
             modeChangeTimer = 0;
+
+        if (currentMode == Mode.Eaten && m == Mode.Fear)
+            m = Mode.Eaten;
 
         currentMode = m;
 

@@ -21,12 +21,6 @@ public class red_movement : MonoBehaviour {
     private Vector2 spawnCoordinates;
     private Vector2 initialCoordinates;
 
-    public GameObject fearModeSound;
-    public AudioSource fearSound;
-
-    public GameObject mainBackground;
-    public AudioSource backgroundSound;
-
     private Mode previousMode;
 
     public RuntimeAnimatorController up;
@@ -67,7 +61,7 @@ public class red_movement : MonoBehaviour {
         Eaten
     };
 
-    Mode currentMode = Mode.Scatter;
+    public Mode currentMode = Mode.Scatter;
 
     
     //
@@ -91,12 +85,6 @@ public class red_movement : MonoBehaviour {
         l_portal = GameObject.Find("left_portal");
         r_portal = GameObject.Find("right_portal");
 
-        fearModeSound = GameObject.Find("fearModeSound");
-        fearSound = fearModeSound.GetComponent<AudioSource>();
-
-        mainBackground = GameObject.Find("background_sound");
-        backgroundSound = mainBackground.GetComponent<AudioSource>();
-
         target = new Vector2(1, 7);
         spawnCoordinates = new Vector2(0, 4);
         initialCoordinates = new Vector2(1, 7);
@@ -116,7 +104,7 @@ public class red_movement : MonoBehaviour {
 
     void Eaten() {
 
-        currentMode = Mode.Eaten;
+        ChangeMode(Mode.Eaten);
 
     }
 
@@ -136,10 +124,7 @@ public class red_movement : MonoBehaviour {
 
     void ModeUpdate() {
 
-        if (currentMode != Mode.Fear) {
-
-            backgroundSound.volume = 1;
-            fearSound.volume = 0;
+        if (currentMode != Mode.Fear && currentMode != Mode.Eaten) {
 
             modeChangeTimer += Time.deltaTime;
 
@@ -247,11 +232,14 @@ public class red_movement : MonoBehaviour {
 
     void ChangeMode(Mode m) {
 
-        if (currentMode != Mode.Fear)
+        if (currentMode != Mode.Fear && currentMode != Mode.Eaten)
             modeChangeTimer = 0;
 
         if (currentMode == Mode.Fear && m == Mode.Fear)
             modeChangeTimer = 0;
+
+        if (currentMode == Mode.Eaten && m == Mode.Fear)
+            m = Mode.Eaten;
 
         currentMode = m;
 
@@ -259,8 +247,6 @@ public class red_movement : MonoBehaviour {
 
     public void ChangeForFear() {
         ChangeMode(Mode.Fear);
-        backgroundSound.volume = 0;
-        fearSound.volume = 1;
     }
 
     void updateAnimatorController() {
