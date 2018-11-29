@@ -18,8 +18,13 @@ public class Orange_movement : MonoBehaviour {
     private GameObject l_portal;
     private GameObject r_portal;
 
+    public bool afterDeathMovement = false;
+
     private Vector2 spawnCoordinates;
     private Vector2 initialCoordinates;
+    private Vector2 startingPos = new Vector2(0, 4);
+
+    private PacmanMovement playerCharScript;
 
     private float waitTime = 7;
     private float theTime = 0;
@@ -84,6 +89,7 @@ public class Orange_movement : MonoBehaviour {
         find = GameObject.Find("PillsSpawn");
         lookFor = find.GetComponent<PillsSpawn>();
         playerChar = GameObject.Find("watman_1");
+        playerCharScript = playerChar.GetComponent<PacmanMovement>();
         l_portal = GameObject.Find("left_portal");
         r_portal = GameObject.Find("right_portal");
         
@@ -95,10 +101,26 @@ public class Orange_movement : MonoBehaviour {
     // Update is called once per frame
     void Update() {
 
-        moveGhost();
-        ModeUpdate();
-        CollisionDetection();
+        if (!afterDeathMovement) {
 
+            moveGhost();
+            ModeUpdate();
+            CollisionDetection();
+
+        }
+
+    }
+
+    public void Restart() {
+
+        currentMode = Mode.Scatter;
+        transform.localPosition = startingPos;
+        modeChangeIterator = 1;
+        modeChangeTimer = 0;
+        isInSpawn = true;
+        target = initialCoordinates;
+        transform.GetComponent<Animator>().runtimeAnimatorController = right;
+        transform.GetComponent<SpriteRenderer>().enabled = true;
     }
 
     void Eaten() {
@@ -115,6 +137,11 @@ public class Orange_movement : MonoBehaviour {
         if (ghostRect.Overlaps(playerCharRect) && currentMode == Mode.Fear) {
 
             Eaten();
+
+        } else if (ghostRect.Overlaps(playerCharRect) && currentMode != Mode.Fear
+            && currentMode != Mode.Eaten) {
+
+            playerCharScript.DeathStart();
 
         }
 
@@ -306,7 +333,7 @@ public class Orange_movement : MonoBehaviour {
         }
 
         //This if statement is useful for allign the position of ghost - making sure that he turns on the right time
-        if ((Vector2)transform.localPosition == target) {
+        if ((Vector2)transform.localPosition == target && afterDeathMovement == false) {
 
             Vector2[] validDirections = new Vector2[4];
             int counter = 0;
@@ -455,6 +482,7 @@ public class Orange_movement : MonoBehaviour {
             target = new Vector2(0, 4);
         } else {
             isInSpawn = false;
+            theTime = 0;
             target = new Vector2(1, 7);
         }
 

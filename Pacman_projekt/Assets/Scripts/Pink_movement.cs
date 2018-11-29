@@ -19,8 +19,13 @@ public class Pink_movement : MonoBehaviour {
     private GameObject r_portal;
     //System.Random rnd = new System.Random();
 
+    public bool afterDeathMovement = false;
+
+    private PacmanMovement playerCharScript;
+
     private Vector2 spawnCoordinates;
     private Vector2 initialCoordinates;
+    private Vector2 startingPos = new Vector2(4, 7);
 
     public GameObject fearModeSound;
     public AudioSource fearSound;
@@ -84,6 +89,7 @@ public class Pink_movement : MonoBehaviour {
         find = GameObject.Find("PillsSpawn");
         lookFor = find.GetComponent<PillsSpawn>();
         playerChar = GameObject.Find("watman_1");
+        playerCharScript = playerChar.GetComponent<PacmanMovement>();
         l_portal = GameObject.Find("left_portal");
         r_portal = GameObject.Find("right_portal");
         target = new Vector2(1, 7);
@@ -102,9 +108,25 @@ public class Pink_movement : MonoBehaviour {
     // Update is called once per frame
     void Update() {
 
-        moveGhost();
-        ModeUpdate();
-        CollisionDetection();
+        if (!afterDeathMovement) {
+
+            moveGhost();
+            ModeUpdate();
+            CollisionDetection();
+
+        }
+
+    }
+
+    public void Restart() {
+
+        currentMode = Mode.Scatter;
+        transform.localPosition = startingPos;
+        modeChangeIterator = 1;
+        modeChangeTimer = 0;
+        target = startingPos;
+        transform.GetComponent<Animator>().runtimeAnimatorController = right;
+        transform.GetComponent<SpriteRenderer>().enabled = true;
 
     }
 
@@ -122,6 +144,11 @@ public class Pink_movement : MonoBehaviour {
         if(ghostRect.Overlaps(playerCharRect) && currentMode == Mode.Fear) {
 
             Eaten();
+
+        } else if (ghostRect.Overlaps(playerCharRect) && currentMode != Mode.Fear
+            && currentMode != Mode.Eaten) {
+
+            playerCharScript.DeathStart();
 
         }
 
@@ -309,7 +336,7 @@ public class Pink_movement : MonoBehaviour {
     void moveGhost() {
 
         //This if statement is useful for allign the position of ghost - making sure that he turns on the right time
-        if ((Vector2)transform.localPosition == target) {
+        if ((Vector2)transform.localPosition == target && afterDeathMovement == false) {
 
             Vector2[] validDirections = new Vector2[4];
             int counter = 0;
