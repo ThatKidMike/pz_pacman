@@ -43,6 +43,8 @@ public class PillEaten : MonoBehaviour {
         } else if (collision.name == "watman_1") {
             sounds.PlaySound();
             Destroy(gameObject);
+            sounds.score += 10;
+            
         } 
             
 

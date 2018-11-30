@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class red_movement : MonoBehaviour {
 
@@ -17,6 +19,8 @@ public class red_movement : MonoBehaviour {
     private Vector2[] allDirections = new Vector2[4];
     private GameObject l_portal;
     private GameObject r_portal;
+
+   
 
     public bool afterDeathMovement = false;
 
@@ -35,6 +39,16 @@ public class red_movement : MonoBehaviour {
     public RuntimeAnimatorController right;
     public RuntimeAnimatorController white;
     public RuntimeAnimatorController blue;
+
+    public GameObject red;
+    public GameObject blue_;
+    public GameObject orange;
+    public GameObject pink;
+
+    private Pink_movement pScript;
+    private Orange_movement oScript;
+    private Blue_movement bScript;
+    private red_movement rScript;
 
     //movement mode
     public int scatterModeTimer1 = 7;
@@ -59,6 +73,13 @@ public class red_movement : MonoBehaviour {
     private int modeChangeIterator = 1;
     private float modeChangeTimer = 0;
     private float blinkTimer = 0;
+    private bool didEatenStart = false;
+
+    public AudioClip eatenAudio;
+    public Text eatenText;
+
+    public GameObject eatenSound;
+    public AudioSource soundEaten;
 
     public enum Mode {
         Chase,
@@ -92,10 +113,22 @@ public class red_movement : MonoBehaviour {
         l_portal = GameObject.Find("left_portal");
         r_portal = GameObject.Find("right_portal");
 
+        eatenSound = GameObject.Find("eatenSound");
+        soundEaten = eatenSound.GetComponent<AudioSource>();
+
         target = new Vector2(1, 7);
         spawnCoordinates = new Vector2(0, 4);
         initialCoordinates = new Vector2(1, 7);
 
+        red = GameObject.Find("ghost");
+        blue_ = GameObject.Find("ghost_blue");
+        orange = GameObject.Find("ghost_orange");
+        pink = GameObject.Find("ghost_pink");
+
+        pScript = pink.GetComponent<Pink_movement>();
+        oScript = orange.GetComponent<Orange_movement>();
+        bScript = blue_.GetComponent<Blue_movement>();
+        rScript = red.GetComponent<red_movement>();
 
 
     }
@@ -113,6 +146,26 @@ public class red_movement : MonoBehaviour {
 
     }
 
+    IEnumerator ProcessEatenGhostAfter(float delay) {
+
+        yield return new WaitForSeconds(delay);
+
+        eatenText.GetComponent<Text>().enabled = false;
+
+        playerCharScript.afterDeathMovement = false;
+        playerCharScript.backgroundFearSound.enabled = true;
+        playerCharScript.backgroundSound.enabled = true;
+        afterDeathMovement = false;
+        pScript.afterDeathMovement = false;
+        oScript.afterDeathMovement = false;
+        bScript.afterDeathMovement = false;
+        didEatenStart = false;
+        gameObject.transform.GetComponent<SpriteRenderer>().enabled = true;
+
+        playerCharScript.score += 200;
+
+    }
+
     public void Restart() {
 
         currentMode = Mode.Scatter;
@@ -123,11 +176,44 @@ public class red_movement : MonoBehaviour {
         transform.GetComponent<Animator>().runtimeAnimatorController = right;
         transform.GetComponent<SpriteRenderer>().enabled = true;
 
+
     }
 
     void Eaten() {
 
-        ChangeMode(Mode.Eaten);
+        if (!didEatenStart) {
+
+            ChangeMode(Mode.Eaten);
+
+            didEatenStart = true;
+
+            playerCharScript.afterDeathMovement = true;
+            playerCharScript.backgroundFearSound.enabled = false;
+            playerCharScript.backgroundSound.enabled = false;
+            afterDeathMovement = true;
+            pScript.afterDeathMovement = true;
+            oScript.afterDeathMovement = true;
+            bScript.afterDeathMovement = true;
+
+            gameObject.transform.GetComponent<SpriteRenderer>().enabled = false;
+            
+
+           // Vector2 pos = transform.position;
+
+            //Vector2 viewPortPoint = Camera.main.WorldToViewportPoint(pos);
+
+            //eatenText.GetComponent<RectTransform>().anchorMin = viewPortPoint;
+           // eatenText.GetComponent<RectTransform>().anchorMax = viewPortPoint;
+
+            eatenText.GetComponent<Text>().enabled = true;
+
+            soundEaten.PlayOneShot(eatenAudio);
+
+            StartCoroutine(ProcessEatenGhostAfter(0.75f));
+
+
+
+        }
 
     }
 

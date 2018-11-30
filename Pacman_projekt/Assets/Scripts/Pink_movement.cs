@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class Pink_movement : MonoBehaviour {
 
@@ -63,6 +65,23 @@ public class Pink_movement : MonoBehaviour {
     private int modeChangeIterator = 1;
     private float modeChangeTimer = 0;
     private float blinkTimer = 0;
+    private bool didEatenStart = false;
+
+    public AudioClip eatenAudio;
+    public Text eatenText;
+
+    public GameObject eatenSound;
+    public AudioSource soundEaten;
+
+    public GameObject red;
+    public GameObject blue_;
+    public GameObject orange;
+    public GameObject pink;
+
+    private Pink_movement pScript;
+    private Orange_movement oScript;
+    private Blue_movement bScript;
+    private red_movement rScript;
 
     public enum Mode {
         Chase,
@@ -100,8 +119,21 @@ public class Pink_movement : MonoBehaviour {
         mainBackground = GameObject.Find("background_sound");
         backgroundSound = mainBackground.GetComponent<AudioSource>();
 
+        eatenSound = GameObject.Find("eatenSound");
+        soundEaten = eatenSound.GetComponent<AudioSource>();
+
         spawnCoordinates = new Vector2(3, 4);
         initialCoordinates = new Vector2(1, 7);
+
+        red = GameObject.Find("ghost");
+        blue_ = GameObject.Find("ghost_blue");
+        orange = GameObject.Find("ghost_orange");
+        pink = GameObject.Find("ghost_pink");
+
+        pScript = pink.GetComponent<Pink_movement>();
+        oScript = orange.GetComponent<Orange_movement>();
+        bScript = blue_.GetComponent<Blue_movement>();
+        rScript = red.GetComponent<red_movement>();
 
     }
 
@@ -115,6 +147,28 @@ public class Pink_movement : MonoBehaviour {
             CollisionDetection();
 
         }
+
+    }
+
+    IEnumerator ProcessEatenGhostAfter(float delay) {
+
+        yield return new WaitForSeconds(delay);
+
+        eatenText.GetComponent<Text>().enabled = false;
+
+        playerCharScript.afterDeathMovement = false;
+        playerCharScript.backgroundFearSound.enabled = true;
+        playerCharScript.backgroundSound.enabled = true;
+
+        afterDeathMovement = false;
+        rScript.afterDeathMovement = false;
+        oScript.afterDeathMovement = false;
+        bScript.afterDeathMovement = false;
+
+        didEatenStart = false;
+        gameObject.transform.GetComponent<SpriteRenderer>().enabled = true;
+
+        playerCharScript.score += 200;
 
     }
 
@@ -132,7 +186,40 @@ public class Pink_movement : MonoBehaviour {
 
     void Eaten() {
 
-        ChangeMode(Mode.Eaten);
+        if (!didEatenStart) {
+
+            ChangeMode(Mode.Eaten);
+
+            didEatenStart = true;
+
+            playerCharScript.afterDeathMovement = true;
+            playerCharScript.backgroundFearSound.enabled = false;
+            playerCharScript.backgroundSound.enabled = false;
+
+            afterDeathMovement = true;
+            rScript.afterDeathMovement = true;
+            oScript.afterDeathMovement = true;
+            bScript.afterDeathMovement = true; 
+
+            gameObject.transform.GetComponent<SpriteRenderer>().enabled = false;
+
+
+            //Vector2 pos = transform.position;
+
+            //Vector2 viewPortPoint = Camera.main.WorldToViewportPoint(pos);
+
+            //eatenText.GetComponent<RectTransform>().anchorMin = viewPortPoint;
+            //eatenText.GetComponent<RectTransform>().anchorMax = viewPortPoint;
+
+            eatenText.GetComponent<Text>().enabled = true;
+
+            soundEaten.PlayOneShot(eatenAudio);
+
+            StartCoroutine(ProcessEatenGhostAfter(0.75f));
+
+
+
+        }
 
     }
 

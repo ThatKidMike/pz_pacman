@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class PacmanMovement : MonoBehaviour {
 
@@ -32,8 +34,8 @@ public class PacmanMovement : MonoBehaviour {
     private GameObject backgroundFear;
     private GameObject soundOfDeath;
     private GameObject introSound;
-    private AudioSource backgroundSound;
-    private AudioSource backgroundFearSound;
+    public AudioSource backgroundSound;
+    public AudioSource backgroundFearSound;
     private AudioSource deathAudioSource;
     private AudioSource introMusic;
     
@@ -53,7 +55,15 @@ public class PacmanMovement : MonoBehaviour {
     private GameObject canvas;
     private Canvas readyCanvas;
 
+    public int score = 0;
     public int playerCharLives = 3;
+
+    public Text scoreText;
+    public Text up1;
+    public Image lives1;
+    public Image lives0;
+
+    
 
     // Use this for initialization
     void Start () {
@@ -100,10 +110,34 @@ public class PacmanMovement : MonoBehaviour {
             CheckInput();
             //Move();
             moveToNxtPoint(direction);
+            UpdateUI();
 
         }
 
 	}
+
+    void UpdateUI() {
+
+        scoreText.text = score.ToString();
+
+        if(playerCharLives == 3) {
+
+            lives0.enabled = true;
+            lives1.enabled = true;
+
+        } else if(playerCharLives == 2) {
+
+            lives0.enabled = true;
+            lives1.enabled = false;
+
+        } else if(playerCharLives == 1) {
+
+            lives0.enabled = false;
+            lives1.enabled = false;
+
+        }
+
+    }
 
     public void StartGame() {
 
@@ -183,6 +217,8 @@ public class PacmanMovement : MonoBehaviour {
 
         gameObject.transform.GetComponent<SpriteRenderer>().enabled = true;
         gameObject.transform.GetComponent<Animator>().runtimeAnimatorController = eatingAnimation;
+
+        playerCharLives--;
 
         yield return new WaitForSeconds(delay);
 
