@@ -62,6 +62,7 @@ public class PacmanMovement : MonoBehaviour {
     public Text up1;
     public Image lives1;
     public Image lives0;
+    public Text highScore;
 
     private GameObject checkForPellets;
     private GameObject checkForPellets1;
@@ -101,6 +102,7 @@ public class PacmanMovement : MonoBehaviour {
 
         canvas = GameObject.Find("Canvas");
         readyCanvas = canvas.GetComponent<Canvas>();
+        highScore.text = StaticStas.Points.ToString();
 
         StartGame();
 
@@ -132,6 +134,7 @@ public class PacmanMovement : MonoBehaviour {
                 backgroundFearSound.enabled = false;
 
                 StaticStas.Points = score;
+                //highScore.text = StaticStas.Points.ToString();
 
                 StartCoroutine(ProcessEnd(4));
 
@@ -326,6 +329,7 @@ public class PacmanMovement : MonoBehaviour {
         if(playerCharLives <= 0) {
 
             StaticStas.Points = score;
+            //highScore.text = StaticStas.Points.ToString();
             SceneManager.LoadScene("End title screen");
 
         }

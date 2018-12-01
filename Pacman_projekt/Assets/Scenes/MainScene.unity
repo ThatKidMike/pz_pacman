@@ -848,6 +848,11 @@ Prefab:
       propertyPath: up1
       value: 
       objectReference: {fileID: 613079027}
+    - target: {fileID: 114648153044364858, guid: 4fbdb1daa7e00bd47bbedc72a3e2e025,
+        type: 2}
+      propertyPath: highScore
+      value: 
+      objectReference: {fileID: 613079027}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 4fbdb1daa7e00bd47bbedc72a3e2e025, type: 2}
   m_IsPrefabParent: 0
@@ -1236,7 +1241,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 100000
+  m_Text: '------'
 --- !u!222 &613079028
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2737,8 +2742,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 291, y: 303}
-  m_SizeDelta: {x: 300, y: 60}
+  m_AnchoredPosition: {x: 332, y: 299}
+  m_SizeDelta: {x: 500, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1957316504
 MonoBehaviour:
@@ -2772,7 +2777,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Punkty
+  m_Text: HIGH SCORE
 --- !u!222 &1957316505
 CanvasRenderer:
   m_ObjectHideFlags: 0
