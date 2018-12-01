@@ -63,7 +63,12 @@ public class PacmanMovement : MonoBehaviour {
     public Image lives1;
     public Image lives0;
 
-    
+    private GameObject checkForPellets;
+    private GameObject checkForPellets1;
+    private GameObject checkForPellets2;
+    private GameObject checkForPellets3;
+
+
 
     // Use this for initialization
     void Start () {
@@ -111,10 +116,41 @@ public class PacmanMovement : MonoBehaviour {
             //Move();
             moveToNxtPoint(direction);
             UpdateUI();
+          
+
+            if(lookFor.amount <= 0) {
+
+                
+                rScript.afterDeathMovement = true;
+                bScript.afterDeathMovement = true;
+                pScript.afterDeathMovement = true;
+                oScript.afterDeathMovement = true;
+
+                gameObject.GetComponent<Animator>().enabled = false;
+                afterDeathMovement = true;
+                backgroundSound.enabled = false;
+                backgroundFearSound.enabled = false;
+
+                StaticStas.Points = score;
+
+                StartCoroutine(ProcessEnd(4));
+
+            } 
+
 
         }
 
 	}
+
+    IEnumerator ProcessEnd(float delay) {
+
+        yield return new WaitForSeconds(delay);
+
+
+        SceneManager.LoadScene("End title screen");
+
+
+    }
 
     void UpdateUI() {
 
@@ -218,8 +254,6 @@ public class PacmanMovement : MonoBehaviour {
         gameObject.transform.GetComponent<SpriteRenderer>().enabled = true;
         gameObject.transform.GetComponent<Animator>().runtimeAnimatorController = eatingAnimation;
 
-        playerCharLives--;
-
         yield return new WaitForSeconds(delay);
 
         Restart();
@@ -283,9 +317,18 @@ public class PacmanMovement : MonoBehaviour {
 
     IEnumerator ProcessRestart(float delay) {
 
+        playerCharLives--;
+
         gameObject.transform.GetComponent<SpriteRenderer>().enabled = false;
 
         transform.GetComponent<AudioSource>().Stop();
+
+        if(playerCharLives <= 0) {
+
+            StaticStas.Points = score;
+            SceneManager.LoadScene("End title screen");
+
+        }
 
         yield return new WaitForSeconds(delay);
 
@@ -296,7 +339,7 @@ public class PacmanMovement : MonoBehaviour {
 
        // playerCharLives--;
 
-        if(playerCharLives >= 0) {
+        if(playerCharLives > 0) {
 
             readyCanvas.enabled = false;
 
@@ -313,7 +356,7 @@ public class PacmanMovement : MonoBehaviour {
             backgroundFearSound.Play();
             _audio.enabled = true;
 
-        }    
+        }  
 
     }
 

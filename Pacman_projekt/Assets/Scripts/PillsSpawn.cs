@@ -9,6 +9,7 @@ public class PillsSpawn : MonoBehaviour {
     public List<KeyValuePair<int, int>> coordinates = new List<KeyValuePair<int, int>>();
     public GameObject node;
     public int[,] xy = new int[100, 100];
+    public int amount = 0;
 
 
 	// Use this for initialization
@@ -44,12 +45,15 @@ public class PillsSpawn : MonoBehaviour {
                 if (!Physics2D.OverlapCircle(new Vector2(-11 + i, -11 + j), (float)0.2)) {
                     if ((i == 0) && (j == 6)) {
                         Instantiate(bigPill, new Vector2(-11 + i, -11 + j), Quaternion.identity);
+                        amount++;
                         coordinates.Add(new KeyValuePair<int, int>(-11 + i, -11 + j));
                     } else if ((i == 25) && (j == 6)) {
                         Instantiate(bigPill, new Vector2(-11 + i, -11 + j), Quaternion.identity);
+                        amount++;
                         coordinates.Add(new KeyValuePair<int, int>(-11 + i, -11 + j));
                     } else {
                         Instantiate(pellet, new Vector2(-11 + i, -11 + j), Quaternion.identity);
+                        amount++;
                         coordinates.Add(new KeyValuePair<int, int>(-11 + i, -11 + j));
                     }
                 }
@@ -60,6 +64,7 @@ public class PillsSpawn : MonoBehaviour {
             for (int i = 5; i < 21; i++) {
                 if (!Physics2D.OverlapCircle(new Vector2(-11 + i, -11 + j), (float)0.2)) {
                     Instantiate(pellet, new Vector2(-11 + i, -11 + j), Quaternion.identity);
+                    amount++;
                     coordinates.Add(new KeyValuePair<int, int>(-11 + i, -11 + j));
                 }
             }
@@ -68,6 +73,7 @@ public class PillsSpawn : MonoBehaviour {
         for(int i = 0; i < 9; i++) {
             if (!Physics2D.OverlapCircle(new Vector2(-11 + i, 4), (float)0.2)) {
                 Instantiate(pellet, new Vector2(-11 + i, 4), Quaternion.identity);
+                amount++;
                 coordinates.Add(new KeyValuePair<int, int>(-11 + i, 4));
             }
         }
@@ -75,6 +81,7 @@ public class PillsSpawn : MonoBehaviour {
         for (int i = 17; i < 26; i++) {
             if (!Physics2D.OverlapCircle(new Vector2(-11 + i, 4), (float)0.2)) {
                 Instantiate(pellet, new Vector2(-11 + i, 4), Quaternion.identity);
+                amount++;
                 coordinates.Add(new KeyValuePair<int, int>(-11 + i, 4));
             }
         }
@@ -83,6 +90,7 @@ public class PillsSpawn : MonoBehaviour {
             for (int i = 5; i < 21; i++) {
                 if (!Physics2D.OverlapCircle(new Vector2(-11 + i, -11 + j), (float)0.2)) {
                     Instantiate(pellet, new Vector2(-11 + i, -11 + j), Quaternion.identity);
+                    amount++;
                     coordinates.Add(new KeyValuePair<int, int>(-11 + i, -11 + j));
                 }
             }
@@ -93,12 +101,15 @@ public class PillsSpawn : MonoBehaviour {
                 if (!Physics2D.OverlapCircle(new Vector2(-11 + i, -11 + j), (float)0.2)) {
                     if ((i == 0) && (j == 28)) {
                         Instantiate(bigPill, new Vector2(-11 + i, -11 + j), Quaternion.identity);
+                        amount++;
                         coordinates.Add(new KeyValuePair<int, int>(-11 + i, -11 + j));
                     } else if ((i == 25) && (j == 28)) {
                         Instantiate(bigPill, new Vector2(-11 + i, -11 + j), Quaternion.identity);
+                        amount++;
                         coordinates.Add(new KeyValuePair<int, int>(-11 + i, -11 + j));
                     } else {
                         Instantiate(pellet, new Vector2(-11 + i, -11 + j), Quaternion.identity);
+                        amount++;
                         coordinates.Add(new KeyValuePair<int, int>(-11 + i, -11 + j));
                     }
                 }

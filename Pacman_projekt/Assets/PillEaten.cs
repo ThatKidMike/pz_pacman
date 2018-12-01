@@ -15,6 +15,9 @@ public class PillEaten : MonoBehaviour {
     private GameObject pink;
     private Pink_movement pinkScript;
 
+    public GameObject find;
+    public PillsSpawn lookFor;
+
     private void Start() {
 
         playerChar = GameObject.Find("watman_1");
@@ -29,6 +32,9 @@ public class PillEaten : MonoBehaviour {
         pink = GameObject.Find("ghost_pink");
         pinkScript = pink.GetComponent<Pink_movement>();
 
+        find = GameObject.Find("PillsSpawn");
+        lookFor = find.GetComponent<PillsSpawn>();
+
     }
 
     private void OnTriggerEnter2D(Collider2D collision) {
@@ -40,11 +46,14 @@ public class PillEaten : MonoBehaviour {
             orangeScript.ChangeForFear();
             pinkScript.ChangeForFear();
             Destroy(gameObject);
+            sounds.score += 20;
+            lookFor.amount--;
         } else if (collision.name == "watman_1") {
             sounds.PlaySound();
             Destroy(gameObject);
             sounds.score += 10;
-            
+            lookFor.amount--;
+
         } 
             
 
