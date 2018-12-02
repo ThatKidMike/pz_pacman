@@ -28,6 +28,10 @@ public class EndTitleScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
+        if (Input.GetKey("escape")) {
+            Application.Quit();
+        }
+
         if (pac.transform.localPosition != (Vector3)target && run_ghost.transform.localPosition != (Vector3)target) {
 
             pac.transform.localPosition += (Vector3)(direction * velocity) * Time.deltaTime;
